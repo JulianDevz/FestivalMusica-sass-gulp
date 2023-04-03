@@ -6,6 +6,7 @@ const plumber = require("gulp-plumber"); //Extraemos la variable de plumber.
 const autoprefixer = require('autoprefixer'); //Se asegure que funcione en el navegador que tu le digas, en caso que no tenga soporte autoprefixer se encarga de eso.
 const cssnano = require('cssnano'); //Comprime el codigo.
 const postcss = require('gulp-postcss'); //Hace algunas transformaciones por medio de estos dos.
+const sourcemaps = require('gulp-sourcemaps'); //Nos permite ver en el navegador la ubicacion de el codigo css
 
 //IMAGEN
 const cache = require('gulp-cache');
@@ -13,11 +14,16 @@ const imagemin = require('gulp-imagemin');
 const webp = require('gulp-webp');
 const avif = require('gulp-avif');
 
+// JAVASCRIPT
+const terser = require('gulp-terser-js');
+
 function css(done){
     src("src/scss/**/*.scss") // Idenfitica todas las carpetas que esten dentro de scss y todos los archivos con esa extension
+        .pipe(sourcemaps.init()) //Iniciamos el map para ir guardando las referencias
         .pipe( plumber() )
         .pipe( sass() ) // Compilarla
         .pipe( postcss([ autoprefixer(), cssnano() ]))
+        .pipe(sourcemaps.write('.')) //Con el punto lo guardamos en la misma ubicacion de css
         .pipe( dest("build/css"))  // Almacenar en el destino
         //Los pipes son acciones
 
@@ -67,6 +73,9 @@ function javascript(done){
 
     // Ubicamos el achivo de js y lo enviamos a build
     src('src/js/**/*.js')
+        .pipe(sourcemaps.init())
+        .pipe( terser() )
+        .pipe(sourcemaps.write('.'))
         .pipe(dest('build/js'));
 
     done();
