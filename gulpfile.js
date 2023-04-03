@@ -58,15 +58,27 @@ function versionAvif(done){
     done();
 }
 
+// Funcion para pasar los archivos de js a la carpeta build
+function javascript(done){
+
+    // Ubicamos el achivo de js y lo enviamos a build
+    src('src/js/**/*.js')
+        .pipe(dest('build/js'));
+
+    done();
+}
+
 // Cuando cambie la hoja de estilos manda a llamar la funcion css, asi tomara los cambios de forma automatica en los archivos de sass
 function dev(done){
-    watch("src/scss/**/*.scss", css) //quedamos mirando todos los archivos sass para ejecutar los cambios de forma automatica
+    watch("src/scss/**/*.scss", css); //quedamos mirando todos los archivos sass para ejecutar los cambios de forma automatica
+    watch("src/js/**/*.js", javascript); //quedamos mirando todos los archivos js para ejecutar los cambios de forma automatica
 
     done();
 }
 
 exports.css = css; //Mandamos a llamar la funcion
+exports.js = javascript; //Mandamos a llamar la funcion
 exports.imagenes = imagenes; //Mandamos a llamar la funcion
 exports.versionWebp = versionWebp; //Mandamos a llamar la funcion para convertir imagenes
 exports.versionAvif = versionAvif; //Mandamos a llamar la funcion para convertir imagenes
-exports.dev = parallel(imagenes, versionWebp, versionAvif,dev); //Llamamos la funcion que aplica el watch, esta es la que debemos ejecutar si queremos estar escuchando los cambios en el archivo de sass (ejecutariamos npx gulp dev), esto en paralelo ejecuta tambien la conversion de las imagenes a webp, y optimizar las imagenes con la funcion imagenes
+exports.dev = parallel(imagenes, versionWebp, versionAvif, javascript, dev); //Llamamos la funcion que aplica el watch, esta es la que debemos ejecutar si queremos estar escuchando los cambios en el archivo de sass (ejecutariamos npx gulp dev), esto en paralelo ejecuta tambien la conversion de las imagenes a webp, y optimizar las imagenes con la funcion imagenes
