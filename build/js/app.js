@@ -5,10 +5,30 @@ document.addEventListener('DOMContentLoaded', function(){
 });
 
 function iniciarApp(){ 
+    navegacionFija();
     crearGaleria();
     scrollNav();
 }
 
+//  Funcion para dejar el header fijo cuando hagamos scroll
+function navegacionFija(){
+    const barra = document.querySelector('.header'); //Elemento que vamos a fijar
+    const sobreFestival = document.querySelector('.sobre-festival') //Seccion en la que queremos se comienze a fijar la barra
+    const body = document.querySelector('body');
+
+    window.addEventListener('scroll', function(){
+        if(sobreFestival.getBoundingClientRect().bottom < 0){
+            //Si al hacer scroll y pasamos el elemento le agregamos una clase a la barra
+            barra.classList.add('fijo');
+            body.classList.add('body-scroll') //Ya que estamos sacando el header de arriba y poniendo en una posicion fija, esa animacion dara un pequeño salto que no queremos, por eso añadiremos esta clase al body la cual añade padding en la parte superior la cual recupera ese espacio que se pierde al sacar el header de la parte superior, el padding que añadimos es del mismo tamaño que el header
+        }else{
+            barra.classList.remove('fijo');
+            body.classList.remove('body-scroll')
+        }
+    })
+}
+
+// Funcion para navegar a las secciones de una forma suave
 function scrollNav(){
     const enlaces = document.querySelectorAll('.navegacion-principal a');
     enlaces.forEach(enlace => {
@@ -33,7 +53,7 @@ function crearGaleria(){
             <source srcset="build/img/thumb/${i}.avif" type="image/avif">
             <source srcset="build/img/thumb/${i}.webp" type="image/webp">
             <!-- La etiqueta <img> siempre sera el que se muestra, asi que si el navegador lee el avif ese sera el que se mostrara en la etiqueta img. 
-            Usamos el width en 200 y height en 300 para que ligthhouse de una buena puntuacion pero igual desde css lo acomodamos para que no afecte el diseño -->
+            Usamos el width en 200 y height en 300 para que lighthouse de una buena puntuacion pero igual desde css lo acomodamos para que no afecte el diseño -->
             <img loading="lazy" width="200" height="300" src="build/img/thumb/${i}.jpg" alt="imagen galeria">
         `;
 
