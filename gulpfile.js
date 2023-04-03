@@ -1,8 +1,11 @@
 const {src, dest, watch, parallel} = require("gulp"); //Mandamos llamar a gulp (el que instalamos en el packaje.json), el require es una forma de extraerlo // Extraemos el source y destino de gulp, watch para observar cambios y parallel para ejecutar en paralelo
 
 //CSS
-const sass = require("gulp-sass")(require("sass")); //Importamos sass, con la ayuda del conector que es gulp sass
-const plumber = require("gulp-plumber"); //Extraemos la variable de plumber
+const sass = require("gulp-sass")(require("sass")); //Importamos sass, con la ayuda del conector que es gulp sass.
+const plumber = require("gulp-plumber"); //Extraemos la variable de plumber.
+const autoprefixer = require('autoprefixer'); //Se asegure que funcione en el navegador que tu le digas, en caso que no tenga soporte autoprefixer se encarga de eso.
+const cssnano = require('cssnano'); //Comprime el codigo.
+const postcss = require('gulp-postcss'); //Hace algunas transformaciones por medio de estos dos.
 
 //IMAGEN
 const cache = require('gulp-cache');
@@ -14,6 +17,7 @@ function css(done){
     src("src/scss/**/*.scss") // Idenfitica todas las carpetas que esten dentro de scss y todos los archivos con esa extension
         .pipe( plumber() )
         .pipe( sass() ) // Compilarla
+        .pipe( postcss([ autoprefixer(), cssnano() ]))
         .pipe( dest("build/css"))  // Almacenar en el destino
         //Los pipes son acciones
 
